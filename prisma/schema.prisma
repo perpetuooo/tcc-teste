@@ -1,0 +1,155 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String   @unique
+  cpf       String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isBlocked Boolean  @default(false)
+
+  loans    Loan[]
+  adminLog AdminLog[]
+  waitList WaitList[]
+}
+
+model Book {
+  id              Int      @id @default(autoincrement())
+  title           String   @unique
+  description     String?
+  author          String
+  imageUrl        String?
+  categoryId      Int?
+  copies          Int      @default(0)
+  copiesAvailable Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  bookCopies Copy[]
+  loans      Loan[]
+
+  category Category?  @relation(fields: [categoryId], references: [id])
+  waitList WaitList[]
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  books Book[] @relation()
+}
+
+model Copy {
+  id        Int       @id @default(autoincrement())
+  bookTitle String
+  bookId    Int
+  ISBN      String    @unique
+  condition Condition
+  isLoaned  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  loans Loan[]
+
+  book Book @relation(fields: [bookId], references: [id])
+}
+
+model Loan {
+  id             Int       @id @default(autoincrement())
+  userName       String
+  userId         String?
+  bookTitle      String
+  bookId         Int?
+  ISBN           String
+  copyId         Int?
+  expirationDate DateTime?
+  loanDate       DateTime?
+  returnDate     DateTime?
+  status         Status    @default(REQUESTED)
+  postponed      Boolean   @default(false)
+  archived       Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt()
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  book Book? @relation(fields: [bookId], references: [id], onDelete: SetNull)
+  copy Copy? @relation(fields: [copyId], references: [id], onDelete: SetNull)
+}
+
+model WaitList {
+  id        Int      @id @default(autoincrement())
+  userName  String
+  userId    String
+  bookTitle String
+  bookId    Int
+  position  Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+}
+
+model AdminLog {
+  id         Int      @id @default(autoincrement())
+  adminId    String?
+  adminName  String
+  action     Action
+  entityType Entity
+  entityId   String
+  entityName String?
+  time       DateTime
+
+  admin User? @relation(fields: [adminId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  REQUESTED
+  ONGOING
+  RETURNED
+  TERMINATED
+  OVERDUE
+}
+
+enum Condition {
+  GOOD
+  BAD
+}
+
+enum Action {
+  CREATE
+  UPDATE
+  DELETE
+  START
+  RETURN
+  TERMINATE
+}
+
+enum Entity {
+  USER
+  BOOK
+  CATEGORY
+  COPY
+  LOAN
+}

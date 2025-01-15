@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 640px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #888;
+      text-align: center;
+    }
+    @media (max-width: 640px) {
+      .container {
+        padding: 15px;
+        border-radius: 3px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p>Olá {{name}},</p>
+    <p>Seu empréstimo para o livro <strong>{{bookTitle}}</strong> foi iniciado com sucesso!</p>
+    <p>Fique atento a data de devolução do livro: <strong>{{date}}.</p>
+    <p>Caso você atrase no retorno do empréstimo, sanções serão aplicadas.</p>
+    <p>Obrigado,</p>
+    <p><strong>Grupo RACNEGÊ</strong></p>
+    <div class="footer">
+      <p>Se você não fez esta solicitação, entre em contato conosco.</p>
+      <p>&copy; 2024 Grupo RACNEGÊ. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</body>
+</html>

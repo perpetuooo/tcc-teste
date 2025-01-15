@@ -1,0 +1,15 @@
+{
+  "loanDuration": 7,
+  "postponeLoanDuration": 7,
+  "maxBooksLimit": 3,
+  "startLoanLimit": 3,
+  "mainEmailInterval": 5,
+  "retryEmailInterval": 1,
+  "dailyEmailLimit": 99,
+  "email": {
+    "date": "2025-01-13",
+    "emailCount": 16,
+    "lastVerifyRun": "2025-01-14",
+    "status": "SUCCESS"
+  }
+}

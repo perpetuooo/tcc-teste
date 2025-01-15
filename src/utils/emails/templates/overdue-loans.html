@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 640px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      font-size: 20px;
+      font-weight: bold;
+      color: #f44336;
+      text-align: center;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #888;
+      text-align: center;
+    }
+    .loan-list {
+      margin-top: 20px;
+      padding: 0;
+      list-style: none;
+    }
+    .loan-item {
+      margin-bottom: 10px;
+    }
+    .loan-item strong {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="header">Atenção: Empréstimos Atrasados</p>
+    <p>Olá {{name}},</p>
+    <p>Os seguintes empréstimos estão atrasados:</p>
+    <ul class="loan-list">
+      {{loans}}
+    </ul>
+    <p>Até a situação ser regularizada, o seu acesso ao acervo foi revogado.</p>
+    <p>Com atenção,</p>
+    <p><strong>Grupo RACNEGÊ</strong></p>
+    <div class="footer">
+      <p>Se você já devolveu os livros, desconsidere esta mensagem.</p>
+      <p>&copy; 2024 Grupo RACNEGÊ. Todos os direitos reservados.</p>
+    </div>
+  </div>
+</body>
+</html>

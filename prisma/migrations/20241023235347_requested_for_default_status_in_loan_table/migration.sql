@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Loan" ALTER COLUMN "status" SET DEFAULT 'REQUESTED';

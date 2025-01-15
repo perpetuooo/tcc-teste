@@ -1,0 +1,900 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Controle de Acervo - Racnegê",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/users/": {
+      "get": {
+        "tags": ["Usuários"],
+        "summary": "Obter dados do usuário",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Exemplares, exemplares disponíveis e lista de empréstimos do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserDataResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/register": {
+      "post": {
+        "tags": ["Usuários"],
+        "summary": "Registrar um novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário registrado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Usuários"],
+        "summary": "Login do usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário autenticado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "delete": {
+        "tags": ["Usuários"],
+        "summary": "Logout do usuário",
+        "responses": {
+          "204": {
+            "description": "Logout realizado com sucesso."
+          }
+        }
+      }
+    },
+    "/users/update": {
+      "put": {
+        "tags": ["Usuários"],
+        "summary": "Atualizar dados do usuário (alguns campos só podem ser alterados por administradores, ex: role)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dados do usuário atualizados com sucesso."
+          }
+        }
+      }
+    },
+    "/users/delete/{id}": {
+      "delete": {
+        "tags": ["Usuários"],
+        "summary": "Deletar usuário",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "example": "0167bb68-f76d-41a2-b57d-52e2622665fd" }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Usuário deletado com sucesso."
+          }
+        }
+      }
+    },
+    "/books/": {
+      "get": {
+        "tags": ["Livros"],
+        "summary": "Obter livros",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de livros.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetBooksInput" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/view/{id}": {
+      "get": {
+        "tags": ["Livros"],
+        "summary": "Obter detalhes do livro",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do livro.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetBookDetailsInput" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/register": {
+      "post": {
+        "tags": ["Livros"],
+        "summary": "Registrar livro (somente administradores)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegisterBookInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Livro registrado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RegisterBookResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/update": {
+      "put": {
+        "tags": ["Livros"],
+        "summary": "Atualizar livro (somente administradores)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateBookInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Livro atualizado.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UpdateBookResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/delete/{id}": {
+      "delete": {
+        "tags": ["Livros"],
+        "summary": "Deletar livro (somente administradores)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Livro deletado com sucesso."
+          }
+        }
+      }
+    },
+    "/books/category/create": {
+      "post": {
+        "tags": ["Categorias"],
+        "summary": "Criar categoria (somente administradores)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateCategoryRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Categoria criada.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CreateCategoryResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/category/delete/{id}": {
+      "delete": {
+        "tags": ["Categorias"],
+        "summary": "Deletar categoria (somente administradores)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Categoria deletada com sucesso."
+          }
+        }
+      }
+    },
+    "/copies/create": {
+      "post": {
+        "summary": "Cria um novo exemplar de livro (somente administradores)",
+        "tags": ["Cópias"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookCopyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Exemplar criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBookCopyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/copies/edit": {
+      "put": {
+        "summary": "Editar um exemplar de livro (somente administradores)",
+        "tags": ["Cópias"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditBookCopyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Exemplar editado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditBookCopyResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/copies/delete/{id}": {
+      "delete": {
+        "summary": "Excluir um exemplar de livro (somente administradores)",
+        "tags": ["Cópias"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "number", "example": 1 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Exemplar excluído com sucesso."
+          }
+        }
+      }
+    },
+    "/loans/": {
+      "get": {
+        "tags": ["Empréstimos"],
+        "summary": "Obter empréstimos do usuário",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de empréstimos.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GetUserLoansResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans/create": {
+      "post": {
+        "summary": "Cria um requerimento de empréstimo",
+        "tags": ["Empréstimos"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLoanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Exemplar criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLoanResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans/start": {
+      "put": {
+        "summary": "Inicia um empréstimo (somente administradores)",
+        "tags": ["Empréstimos"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManipulateLoanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Empréstimo iniciado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartLoanResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans/postpone": {
+      "put": {
+        "summary": "Estende um empréstimo",
+        "tags": ["Empréstimos"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostponeLoanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Empréstimo estendido com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostponeLoanResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans/return": {
+      "put": {
+        "summary": "Retorna um empréstimo (somente administradores)",
+        "description": "As rotas para retornar/encerrar um empréstimo são PUT porque os empréstimos nunca são excluídos no sistema.",
+        "tags": ["Empréstimos"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManipulateLoanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Empréstimo retornado com sucesso."
+          }
+        }
+      }
+    },
+    "/loans/terminate": {
+      "put": {
+        "summary": "Encerra um empréstimo (somente administradores)",
+        "description": "As rotas para retornar/encerrar um empréstimo são PUT porque os empréstimos nunca são excluídos no sistema.",
+        "tags": ["Empréstimos"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManipulateLoanRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Empréstimo encerrado com sucesso."
+          }
+        }
+      }
+    },
+    "/loans/waitlist/enter": {
+      "put": {
+        "summary": "Entra na lista de espera de um livro",
+        "tags": ["Fila de Espera"],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManageWaitListRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário entrou na fila.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManageWaitListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans/waitlist/position": {
+      "get": {
+        "summary": "Retorna as posições do usuário em cada fila de espera que ele está",
+        "tags": ["Fila de Espera"],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista com as posições do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PositionsWaitListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/loans/waitlist/exit/:{bookId}": {
+      "delete": {
+        "summary": "Sai na lista de espera de um livro",
+        "tags": ["Fila de Espera"],
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "example": 1 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário saiu na fila."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetUserDataResponse": {
+        "type": "object",
+        "properties": {
+          "copies": { "type": "number", "example": 10 },
+          "copiesAvailable": { "type": "number", "example": 10 },
+            "loans": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string", "example": "0167bb68-f76d-41a2-b57d-52e2622665fd" },
+                "userName": { "type": "string", "example": "Nome do Usuário" },
+                "bookTitle": { "type": "string", "example": "Título do Livro" },
+                "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+                "expirationDate": { "type": "string", "example": "2024-12-12T12:12:12.176Z" },
+                "loanDate": { "type": "string", "example": "2024-12-12T12:12:12.176Z" },
+                "returnDate": { "type": "string", "example": "2024-12-12T12:12:12.176Z" },
+                "status": { "type": "string", "enum": ["REQUESTED", "ONGOING"], "example": "REQUESTED" },
+                "postponed": { "type": "boolean", "example": "false" }
+              }
+            }
+          }
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "example": "exemplo@email.com" },
+          "name": { "type": "string", "example": "Nome do Usuário" },
+          "phone": { "type": "string", "example": "1234567890" },
+          "cpf": { "type": "string", "example": "123.456.789-00" },
+          "password": { "type": "string", "example": "password123" }
+        },
+        "required": ["email", "name", "phone", "cpf", "password"]
+      },
+      "CreateUserResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string", "example": "token123" }
+        }
+      },
+      "LoginUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "example": "exemplo@email.com" },
+          "password": { "type": "string", "example": "password123" }
+        },
+        "required": ["email", "password"]
+      },
+      "LoginUserResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string", "example": "token123" }
+        }
+      },
+      "UpdateUserRequest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "user-id" },
+          "name": { "type": "string", "example": "Updated Nome do Usuário" },
+          "email": { "type": "string", "example": "updated@example.com" },
+          "phone": { "type": "string", "example": "0987654321" },
+          "isBlocked": { "type": "boolean", "example": false },
+          "oldPassword": { "type": "string", "example": "oldPassword123" },
+          "newPassword": { "type": "string", "example": "newPassword123" },
+          "role": { "type": "string", "enum": ["USER", "ADMIN"] }
+        }
+      },
+      "GetBooksInput": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "title": { "type": "string", "example": "Título do Livro" },
+          "imageUrl": { "type": "string", "example": "book-cover.jpg" },
+          "category": { "type": "string", "example": "Categoria" }
+        }
+      },
+      "GetBookDetailsInput": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "title": { "type": "string", "example": "Título do Livro" },
+          "description": { "type": "string", "example": "Descrição do Livro" },
+          "author": { "type": "string", "example": "Autor do Livro" },
+          "copies": { "type": "number", "example": 10 },
+          "copiesAvailable": { "type": "number", "example": 10 },
+          "category": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "number", "example": 1 }, 
+                "name": { "type": "string", "example": "Nome da Categoria" }
+              }
+            }
+          }
+        }
+      },
+      "RegisterBookInput": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "example": "Título do Livro" },
+          "description": { "type": "string", "example": "Descrição do Livro" },
+          "author": { "type": "string", "example": "Autor do Livro" },
+          "category": { "type": "integer", "example": 1, "nullable": true }
+        },
+        "required": ["title", "author"]
+      },
+      "RegisterBookResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "title": { "type": "string", "example": "Título do Livro" },
+          "description": { "type": "string", "example": "Descrição do Livro" },
+          "author": { "type": "string", "example": "Autor do Livro" },
+          "category": { "type": "integer", "example": 1, "nullable": true }
+        }
+      },
+      "UpdateBookInput": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "title": { "type": "string", "example": "Título do Livro" },
+          "description": { "type": "string", "example": "Descrição do Livro" },
+          "author": { "type": "string", "example": "Autor do Livro" },
+          "category": { "type": "integer", "example": 1, "nullable": true }
+        },
+        "required": ["id", "title", "author"]
+      },
+      "UpdateBookResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "title": { "type": "string", "example": "Título do Livro" },
+          "description": { "type": "string", "example": "Descrição do Livro" },
+          "author": { "type": "string", "example": "Autor do Livro" },
+          "category": { "type": "integer", "example": 1, "nullable": true }
+        }
+      },
+      "CreateCategoryRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "Categoria" }
+        },
+        "required": ["name"]
+      },
+      "CreateCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "name": { "type": "string", "example": "Categoria" }
+        }
+      },
+      "CreateBookCopyRequest": {
+        "type": "object",
+        "required": ["bookId", "ISBN", "condition"],
+        "properties": {
+          "bookId": { "type": "integer", "example": "1" },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "condition": { "type": "string", "enum": ["GOOD", "BAD"], "example": "GOOD" }
+        }
+      },
+      "CreateBookCopyResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": "1" },
+          "bookTitle": { "type": "string", "example": "Título do Livro" },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "condition": { "type": "string", "enum": ["GOOD", "BAD"], "example": "GOOD" },
+          "isLoaned": { "type": "boolean", "example": "true" }
+        }
+      },
+      "EditBookCopyRequest": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "integer", "example": "1" },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "condition": { "type": "string", "enum": ["GOOD", "BAD"], "example": "GOOD" }
+        }
+      },
+      "EditBookCopyResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": "1" },
+          "bookTitle": { "type": "string", "example": "Título do Livro" },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "condition": { "type": "string", "enum": ["GOOD", "BAD"], "example": "GOOD" },
+          "isLoaned": { "type": "boolean", "example": "true" }
+        }
+      },
+      "GetUserLoansResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "userName": { "type": "string", "example": "Nome do Usuário" },
+          "userId": { "type": "string", "example": "0167bb68-f76d-41a2-b57d-52e2622665fd" },
+          "bookTitle": { "type": "string", "example": "Título do Livro" },
+          "bookId": { "type": "number", "example": 1 },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "copyId": { "type": "number", "example": 1 },
+          "expirationDate": { "type": "string", "example": "2024-12-12T12:12:12.176Z" },
+          "loanDate": { "type": "string", "example": "2024-12-12T12:12:12.176Z" },
+          "returnDate": { "type": "string", "example": "2024-12-12T12:12:12.176Z" },
+          "status": { "type": "string", "enum": ["REQUESTED", "ONGOING"], "example": "REQUESTED" },
+          "postponed": { "type": "boolean", "example": "false" },
+          "archived": { "type": "boolean", "example": "false" }
+        }
+      },
+      "CreateLoanRequest": {
+        "type": "object",
+        "properties": {
+          "bookId": { "type": "integer", "example": 1 }
+        },
+        "required": ["bookId"]
+      },
+      "CreateLoanResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "userName": { "type": "string", "example": "Nome do Usuário" },
+          "userId": { "type": "string", "example": "0167bb68-f76d-41a2-b57d-52e2622665fd" },
+          "bookTitle": { "type": "string", "example": "Título do Livro" },
+          "bookId": { "type": "number", "example": 1 },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "copyId": { "type": "number", "example": 1 },
+          "postponed": { "type": "boolean", "example": "true" }
+        }
+      },
+      "ManipulateLoanRequest": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "userId": { "type": "string", "example": "0167bb68-f76d-41a2-b57d-52e2622665fd", "nullable": true },
+          "bookId": { "type": "number", "example": 1, "nullable": true }
+        },
+        "required": ["id"]
+      },
+      "StartLoanResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "userName": { "type": "string", "example": "Nome do Usuário" },
+          "userId": { "type": "string", "example": "0167bb68-f76d-41a2-b57d-52e2622665fd" },
+          "bookTitle": { "type": "string", "example": "Título do Livro" },
+          "bookId": { "type": "number", "example": 1 },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "copyId": { "type": "number", "example": 1 },
+          "postponed": { "type": "boolean", "example": "true" }
+        }
+      },
+      "PostponeLoanRequest": {
+        "type": "object",
+        "properties": {
+          "bookId": { "type": "number", "example": 1 }
+        },
+        "required": ["bookId"]
+      },
+      "PostponeLoanResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number", "example": 1 },
+          "userName": { "type": "string", "example": "Nome do Usuário" },
+          "userId": { "type": "string", "example": "0167bb68-f76d-41a2-b57d-52e2622665fd" },
+          "bookTitle": { "type": "string", "example": "Título do livro" },
+          "bookId": { "type": "integer", "example": 1 },
+          "ISBN": { "type": "string", "example": "978-92-95055-02-5" },
+          "copyId": { "type": "number", "example": 1 },
+          "postponed": { "type": "boolean", "example": "true" }
+        }
+      },
+      "ManageWaitListRequest": {
+        "type": "object",
+        "properties": {
+          "bookId": { "type": "number", "example": 1 }
+        }
+      },
+      "ManageWaitListResponse": {
+        "type": "object",
+        "properties": {
+          "position": { "type": "number", "example": 1 }
+        }
+      },
+      "PositionsWaitListResponse": {
+        "type": "object",
+        "properties": {
+          "positions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "bookId": { "type": "number", "example": 1 },
+                "bookTitle": { "type": "string", "example": "Título do Livro" },
+                "position": { "type": "number", "example": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
